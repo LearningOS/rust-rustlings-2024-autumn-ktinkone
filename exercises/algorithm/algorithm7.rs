@@ -3,7 +3,6 @@
 	This question requires you to use a stack to achieve a bracket match
 */
 
-// I AM NOT DONE
 #[derive(Debug)]
 struct Stack<T> {
 	size: usize,
@@ -32,7 +31,12 @@ impl<T> Stack<T> {
 	}
 	fn pop(&mut self) -> Option<T> {
 		// TODO
-		None
+		if self.data.len() == 0 {
+			None
+		} else {
+			self.size -= 1;
+			self.data.pop()
+		}
 	}
 	fn peek(&self) -> Option<&T> {
 		if 0 == self.size {
@@ -101,9 +105,58 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 
 fn bracket_match(bracket: &str) -> bool
 {
-	//TODO
-	true
+	let mut stack_1 = Stack::<char>::new();
+	let mut res = false;
+
+	if bracket.is_empty() {
+		return true;
+	}
+
+	for c in bracket.chars() {
+		if stack_1.is_empty() {
+			if c != '(' && c != '[' && c != '{' {
+				return false;
+			} else {
+				stack_1.push(c);
+			}
+		} else {
+			if c != '(' && c != '[' && c != '{' && c != ')' && c != ']' && c != '}' {
+				();
+			} else {
+				if c == '(' || c == '[' || c == '{' {
+					stack_1.push(c);
+				} else {
+					let a = stack_1.pop();
+					match a {
+						None => {
+							res = false;
+							break;
+						},
+						Some(b) => {
+							if b == '(' && c != ')' {
+								res = false;
+								break;
+							} else if b == '[' && c != ']' {
+								res = false;
+								break;
+							} else if b == '{' && c != '}' {
+								res = false;
+								break;
+							}
+						},
+					}
+				}
+			}
+		}
+	}
+
+	if stack_1.is_empty() {
+		res = true;
+	}
+
+	res
 }
+
 
 #[cfg(test)]
 mod tests {

@@ -2,7 +2,6 @@
 	heap
 	This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -37,10 +36,30 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+
+        self.count = self.count + 1;
+        self.items.insert(self.count, value);
+
+        let mut cur_idx = self.count;
+
+        loop {
+            if cur_idx == 1 {
+                break;
+            }
+
+            let parent_idx = self.parent_idx(cur_idx);
+
+            if (self.comparator)(&self.items[cur_idx], &self.items[parent_idx]) {
+                println!("swap {} {}", cur_idx, parent_idx);
+                self.items.swap(cur_idx, parent_idx);
+                cur_idx = parent_idx;
+            } else {
+                break;
+            }
+        }
     }
 
-    fn parent_idx(&self, idx: usize) -> usize {
+    fn parent_idx(&self, idx: usize) -> usize { // ? 
         idx / 2
     }
 
@@ -57,8 +76,18 @@ where
     }
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
-        //TODO
-		0
+        let left_idx = self.left_child_idx(idx);
+        let right_idx = self.right_child_idx(idx);
+    
+        if right_idx < self.count {
+            if (self.comparator)(&self.items[left_idx], &self.items[right_idx]) {
+                left_idx
+            } else {
+                right_idx
+            }
+        } else {
+            left_idx
+        }
     }
 }
 
@@ -84,8 +113,36 @@ where
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        if self.count == 0 {
+            return None;
+        }
+
+        self.items.swap(1, self.count);
+        let res = self.items.pop();
+        self.count -= 1;
+
+        if self.count > 0 {
+            let mut idx = 1;
+    
+            loop {
+                println!("next loop");
+                let left_idx = self.left_child_idx(idx);
+                if left_idx >= self.count {
+                    break;
+                }
+                let smallest_child = self.smallest_child_idx(idx);
+                if (self.comparator)(&self.items[smallest_child], &self.items[idx]) {
+                    println!("next swap {} {}", smallest_child, idx);
+                    self.items.swap(idx, smallest_child);
+                    idx = smallest_child;
+                } else {
+                    break;
+                }
+
+            }
+        }
+
+        res
     }
 }
 

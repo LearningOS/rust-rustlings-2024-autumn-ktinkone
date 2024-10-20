@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,14 +68,56 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+
+}
+
+impl LinkedList<i32> {
+    pub fn merge(list_a:LinkedList<i32>,list_b:LinkedList<i32>) -> Self
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		let  a_len: i32 = list_a.length as i32;
+        let  b_len: i32 = list_b.length as i32;
+        let mut list_a = list_a;
+        let mut list_b = list_b;
+        let mut list = LinkedList::<i32>::new();
+        let mut a_idx: i32 = 0;
+        let mut b_idx: i32 = 0;
+
+        loop {
+            if a_idx == a_len {
+                for x in b_idx..b_len {
+                    if let Some(value) = list_b.get(x as i32) {
+                        list.add(value.clone())
+                    }
+                }
+                break;
+            }
+
+            if b_idx == b_len {
+                for x in a_idx..a_len {
+                    if let Some(value) = list_a.get(x as i32) {
+                        list.add(value.clone())
+                    }
+                }
+                break;
+            }
+
+            let a_op = list_a.get(a_idx);
+            let b_op = list_b.get(b_idx);
+
+            if a_op.is_some() && b_op.is_some() {
+                let a_v = *a_op.unwrap();
+                let b_v = *b_op.unwrap();
+                if a_v < b_v {
+                    list.add(a_v);
+                    a_idx = a_idx + 1;
+                } else {
+                    list.add(b_v);
+                    b_idx = b_idx + 1;
+                }
+            }
         }
+
+        list
 	}
 }
 

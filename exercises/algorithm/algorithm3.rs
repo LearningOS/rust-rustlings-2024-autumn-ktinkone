@@ -3,10 +3,24 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
-	//TODO
+fn sort<T: Ord>(array: &mut [T]){
+    let arr_len = array.len();
+
+    if arr_len <= 1 {
+        return;
+    }
+
+    for i in 0..arr_len {
+        for j in i..arr_len {
+            if array[j] < array[i] {
+                //let tmp = array[j];  //need copy trait
+                //array[j] = array[i];
+                //array[i] = tmp;
+                array.swap(i, j);
+            }
+        }
+    }
 }
 #[cfg(test)]
 mod tests {

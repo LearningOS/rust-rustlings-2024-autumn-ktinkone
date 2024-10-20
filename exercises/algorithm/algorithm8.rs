@@ -2,7 +2,6 @@
 	queue
 	This question requires you to use queues to implement the functionality of the stac
 */
-// I AM NOT DONE
 
 #[derive(Debug)]
 pub struct Queue<T> {
@@ -20,7 +19,7 @@ impl<T> Queue<T> {
         self.elements.push(value)
     }
 
-    pub fn dequeue(&mut self) -> Result<T, &str> {
+    pub fn dequeue(&mut self) -> Result<T, &'static str> {
         if !self.elements.is_empty() {
             Ok(self.elements.remove(0usize))
         } else {
@@ -54,28 +53,60 @@ impl<T> Default for Queue<T> {
 
 pub struct myStack<T>
 {
-	//TODO
+	nums:i32,
 	q1:Queue<T>,
 	q2:Queue<T>
 }
 impl<T> myStack<T> {
     pub fn new() -> Self {
         Self {
-			//TODO
+			nums:0,
 			q1:Queue::<T>::new(),
 			q2:Queue::<T>::new()
         }
     }
     pub fn push(&mut self, elem: T) {
-        //TODO
+        self.q1.enqueue(elem);
+	    self.nums = self.nums + 1;
     }
+
     pub fn pop(&mut self) -> Result<T, &str> {
-        //TODO
-		Err("Stack is empty")
+        let res: Result<T, &str>;
+        if self.nums == 0 {
+		    Err("Stack is empty")
+	    } else {
+            for i in 0..(self.nums - 1) {
+                match self.q1.dequeue() {
+                    Ok(x) => {
+                        self.q2.enqueue(x);
+                    },
+                    Err(x) => {
+                        println!("Err")
+                    },
+                }
+            }
+            res = self.q1.dequeue();
+            for i in 0..(self.nums - 1) {
+                match self.q2.dequeue() {
+                    Ok(x) => {
+                        self.q1.enqueue(x);
+                    },
+                    Err(x) => {
+                        println!("Err")
+                    },
+                }
+            }
+            self.nums = self.nums - 1;
+            res
+	    }
     }
+
     pub fn is_empty(&self) -> bool {
-		//TODO
-        true
+	if self.nums == 0 {
+		true
+	} else {
+		false
+	}
     }
 }
 
